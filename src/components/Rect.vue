@@ -1,29 +1,34 @@
 <template>
-  <svg xmlns="http://www.w3.org/2000/svg" class="rect">
-    <rect
-      :x="rect.x"
-      :y="rect.y"
-      width="30"
-      height="30"
-      stroke="black"
-      fill="#fff"
-      stroke-width="2"
-      @mousedown="onMouseDown"
-      @mouseup="onMouseUp"
-    />
-  </svg>
+  <rect
+    class="rect"
+    :x="rect.x"
+    :y="rect.y"
+    :width="rect.width"
+    :height="rect.height"
+    stroke="black"
+    fill="#fff"
+    stroke-width="2"
+    @mousedown="onMouseDown"
+    @mouseup="onMouseUp"
+  />
+  <Knobs :node="node" />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import Knobs from './Knobs.vue'
 
 type Data = {
   rect: {
     x: number
     y: number
+    width: number
+    height: number
   }
   dragOffsetX: number | null
   dragOffsetY: number | null
+  knobWidth: number
+  knobHeight: number
 }
 
 // 参考記事
@@ -32,14 +37,26 @@ type Data = {
 
 export default defineComponent({
   name: 'Rect',
+  components: {
+    Knobs
+  },
   data: (): Data => ({
     rect: {
-      x: 0,
-      y: 0
+      x: 10,
+      y: 10,
+      width: 200,
+      height: 30
     },
     dragOffsetX: 0,
-    dragOffsetY: 0
+    dragOffsetY: 0,
+    knobWidth: 10,
+    knobHeight: 10
   }),
+  computed: {
+    node(): any {
+      return this.rect
+    }
+  },
   methods: {
     /**
      * 対象の要素をクリックしてドラッグ開始したとき
@@ -70,6 +87,7 @@ export default defineComponent({
     onMouseMove(e: any) {
       if (this.dragOffsetX === null || this.dragOffsetY === null) return
       this.rect = {
+        ...this.rect,
         x: e.offsetX - this.dragOffsetX,
         y: e.offsetY - this.dragOffsetY
       }
@@ -78,9 +96,10 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .rect {
-  width: 100%;
-  height: 100%;
+  //stroke: blue;
+  //stroke-width: 2;
+  //stroke-dasharray: 1;
 }
 </style>

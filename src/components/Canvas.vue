@@ -1,7 +1,7 @@
 <template>
-  <div class="container">
+  <svg xmlns="http://www.w3.org/2000/svg" class="container">
     <Rect />
-  </div>
+  </svg>
 </template>
 
 <script lang="ts">
