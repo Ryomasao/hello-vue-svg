@@ -16,7 +16,11 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Knobs from './Knobs.vue'
+import Knobs, { Direction } from './Knobs.vue'
+
+// 参考記事
+// https://ja.javascript.info/mouse-drag-and-drop
+// https://dev.to/abolz/roll-your-own-svg-drag-and-drop-in-vuejs-2c7o
 
 type Data = {
   rect: {
@@ -31,9 +35,8 @@ type Data = {
   knobHeight: number
 }
 
-// 参考記事
-// https://ja.javascript.info/mouse-drag-and-drop
-// https://dev.to/abolz/roll-your-own-svg-drag-and-drop-in-vuejs-2c7o
+const MIN_WIDTH = 50
+const MIN_HEIGHT = 20
 
 export default defineComponent({
   name: 'Rect',
@@ -61,7 +64,7 @@ export default defineComponent({
     /**
      * 対象の要素をクリックしてドラッグ開始したとき
      */
-    onMouseDown(e: any) {
+    onMouseDown(e: MouseEvent) {
       // offsetX/Yは、ドラック対象の要素をクリックした場所の座標
       // 一方、this.react.x/yは、ドラック対象の要素の左上の座標
       // ドラッグ時に、offsetX/Yをそのままthis.rect.x/yにセットすると、クリックした座標が、rectの左上になってしまう。
@@ -76,7 +79,7 @@ export default defineComponent({
     /**
      * 対象の要素からクリックが離れたとき
      */
-    onMouseUp(e: any) {
+    onMouseUp() {
       this.dragOffsetX = null
       this.dragOffsetY = null
       document.removeEventListener('mousemove', this.onMouseMove)
@@ -84,7 +87,7 @@ export default defineComponent({
     /**
      * ドラッグ中
      */
-    onMouseMove(e: any) {
+    onMouseMove(e: MouseEvent) {
       if (this.dragOffsetX === null || this.dragOffsetY === null) return
       this.rect = {
         ...this.rect,
@@ -95,22 +98,64 @@ export default defineComponent({
     /**
      * Knobドラッグ中
      */
-    onKnobMouseMove(e: any, index: string) {
+    onKnobMouseMove(e: MouseEvent, index: Direction) {
       this.rect = after(e, this.rect, index)
     }
   }
 })
 
-const after = (e: any, rect: Data['rect'], index: string) => {
+const after = (e: MouseEvent, rect: Data['rect'], index: Direction) => {
+  if (index === 'top') {
+    const verticalChange = rect.y - e.offsetY
+
+    if (verticalChange < 0 && rect.height <= MIN_HEIGHT) {
+      return rect
+    }
+
+    return {
+      ...rect,
+      y: e.offsetY,
+      height: rect.height + verticalChange
+    }
+  }
+
   if (index === 'right') {
     const horizonalChange = e.offsetX - (rect.x + rect.width)
+    if (horizonalChange < 0 && rect.width <= MIN_WIDTH) {
+      return rect
+    }
     return {
       ...rect,
       width: rect.width + horizonalChange
     }
   }
 
-  return rect
+  if (index === 'bottom') {
+    const verticalChange = e.offsetY - (rect.y + rect.height)
+
+    if (verticalChange < 0 && rect.height <= MIN_HEIGHT) {
+      return rect
+    }
+
+    return {
+      ...rect,
+      height: rect.height + verticalChange
+    }
+  }
+
+  if (index === 'left') {
+    const horizonalChange = rect.x - e.offsetX
+    if (horizonalChange < 0 && rect.width <= MIN_WIDTH) {
+      return rect
+    }
+    return {
+      ...rect,
+      x: e.offsetX,
+      width: rect.width + horizonalChange
+    }
+  }
+
+  throw new Error('this code should be unreachable.')
 }
 
 //const getEdge = (rect: Data['rect'], index: string) => {

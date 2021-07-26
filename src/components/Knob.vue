@@ -44,7 +44,7 @@ export default defineComponent({
     /**
      * 対象の要素をクリックしてドラッグ開始したとき
      */
-    onMouseDown(e: any) {
+    onMouseDown(e: MouseEvent) {
       document.addEventListener('mousemove', this.onMouseMove)
       // mouseupをelementにbindすると、
       // element外にカーソルをおいて、クリックを離した場合、mouseupイベントがキャッチできない
@@ -57,14 +57,14 @@ export default defineComponent({
     /*
      * 対象の要素からクリックが離れたとき
      */
-    onMouseUp(e: any) {
+    onMouseUp(e: MouseEvent) {
       document.removeEventListener('mousemove', this.onMouseMove)
       this.$emit('mouseup', e)
     },
     /**
      * ドラッグ中
      */
-    onMouseMove(e: any) {
+    onMouseMove(e: MouseEvent) {
       this.$emit('mousemove', e)
     }
   }

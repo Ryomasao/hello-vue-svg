@@ -19,6 +19,8 @@ type Data = {
   knobHeight: number
 }
 
+export type Direction = 'top' | 'right' | 'bottom' | 'left'
+
 export default defineComponent({
   name: 'Knobs',
 
@@ -75,19 +77,19 @@ export default defineComponent({
     /**
      * 対象の要素をクリックしてドラッグ開始したとき
      */
-    onMouseDown(e: any) {
+    onMouseDown(e: MouseEvent) {
       this.$emit('mousedown', e)
     },
     /**
      * 対象の要素からクリックが離れたとき
      */
-    onMouseUp(e: any) {
+    onMouseUp(e: MouseEvent) {
       this.$emit('mouseup', e)
     },
     /**
      * ドラッグ中
      */
-    onMouseMove(e: any, index: string) {
+    onMouseMove(e: MouseEvent, index: Direction) {
       this.$emit('mousemove', e, index)
     }
   }
