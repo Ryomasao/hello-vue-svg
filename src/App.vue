@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <ShapePanel />
-    <Canvas :shapes="shapes" @add="onAddShape" />
+    <Canvas :nodes="nodes" @add="onAddShape" />
   </div>
 </template>
 
@@ -19,12 +19,14 @@ const factory = (params: FactoryParam) => {
     x: params.x,
     y: params.y,
     width: 50,
-    height: 50
+    height: 50,
+    prevNode: null,
+    nextNode: null
   }
 }
 
 type Data = {
-  shapes: any[]
+  nodes: any[]
 }
 
 export default defineComponent({
@@ -36,12 +38,12 @@ export default defineComponent({
   },
 
   data: (): Data => ({
-    shapes: []
+    nodes: []
   }),
 
   methods: {
     onAddShape(payload: FactoryParam) {
-      this.shapes.push(factory(payload))
+      this.nodes.push(factory(payload))
     }
   }
 })

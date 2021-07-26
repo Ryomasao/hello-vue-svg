@@ -1,5 +1,6 @@
 <template>
   <rect
+    ref="rect"
     class="rect"
     :x="rect.x"
     :y="rect.y"
@@ -8,10 +9,11 @@
     stroke="black"
     fill="#fff"
     stroke-width="2"
+    @click="onClick"
     @mousedown="onMouseDown"
     @mouseup="onMouseUp"
   />
-  <Knobs :node="node" @mousemove="onKnobMouseMove" />
+  <Knobs v-if="active" :node="node" @mousemove="onKnobMouseMove" />
 </template>
 
 <script lang="ts">
@@ -33,6 +35,7 @@ type Data = {
   dragOffsetY: number | null
   knobWidth: number
   knobHeight: number
+  active: boolean
 }
 
 const MIN_WIDTH = 50
@@ -68,7 +71,9 @@ export default defineComponent({
     dragOffsetY: 0,
     // 要素のサイズを変更するKnobのサイズ
     knobWidth: 10,
-    knobHeight: 10
+    knobHeight: 10,
+    // 要素にフォーカスがあたっている場合true
+    active: false
   }),
 
   computed: {
@@ -86,6 +91,12 @@ export default defineComponent({
   },
 
   methods: {
+    onClick() {
+      this.active = !this.active
+    },
+    onClickOutside() {
+      this.active = false
+    },
     /**
      * 対象の要素をクリックしてドラッグ開始したとき
      */

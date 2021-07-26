@@ -5,7 +5,7 @@
     @dragover="onDragOver"
     @drop="onDrop"
   >
-    <Rect v-for="shape in shapes" :key="shape.id" :x="shape.x" :y="shape.y" />
+    <Rect v-for="node in nodes" :key="node.id" :x="node.x" :y="node.y" />
   </svg>
 </template>
 
@@ -18,7 +18,7 @@ export default defineComponent({
   name: 'Canvas',
 
   props: {
-    shapes: {
+    nodes: {
       type: Array,
       default: () => []
     }
