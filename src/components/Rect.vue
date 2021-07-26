@@ -40,9 +40,22 @@ const MIN_HEIGHT = 20
 
 export default defineComponent({
   name: 'Rect',
+
   components: {
     Knobs
   },
+
+  props: {
+    x: {
+      type: Number,
+      default: () => 10
+    },
+    y: {
+      type: Number,
+      default: () => 10
+    }
+  },
+
   data: (): Data => ({
     rect: {
       x: 10,
@@ -50,16 +63,28 @@ export default defineComponent({
       width: 50,
       height: 50
     },
+    // ドラッグしたときの座標のドラック対象の要素の左上からの相対位置
     dragOffsetX: 0,
     dragOffsetY: 0,
+    // 要素のサイズを変更するKnobのサイズ
     knobWidth: 10,
     knobHeight: 10
   }),
+
   computed: {
     node(): any {
       return this.rect
     }
   },
+
+  created() {
+    // TODO
+    // ドロップしたときの座標位置はセンターかも
+    // おいたときに左上が起点になるので、ちょっと違和感がある。
+    this.rect.x = this.x
+    this.rect.y = this.y
+  },
+
   methods: {
     /**
      * 対象の要素をクリックしてドラッグ開始したとき

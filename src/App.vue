@@ -1,21 +1,23 @@
 <template>
   <div class="container">
-    <ShapePanel @add="onAddShape" />
-    <Canvas :shapes="shapes" />
+    <ShapePanel />
+    <Canvas :shapes="shapes" @add="onAddShape" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { ShapeType } from '@/models'
 import Canvas from './components/Canvas.vue'
 import ShapePanel from './components/ShapePanel/ShapePanel.vue'
 
-const factory = () => {
+type FactoryParam = { shapeType: ShapeType; x: number; y: number }
+const factory = (params: FactoryParam) => {
   return {
     id: Date.now(),
-    type: 'rectangle',
-    x: 0,
-    y: 0,
+    type: params.shapeType,
+    x: params.x,
+    y: params.y,
     width: 50,
     height: 50
   }
@@ -34,12 +36,12 @@ export default defineComponent({
   },
 
   data: (): Data => ({
-    shapes: [factory()]
+    shapes: []
   }),
 
   methods: {
-    onAddShape() {
-      this.shapes.push(factory())
+    onAddShape(payload: FactoryParam) {
+      this.shapes.push(factory(payload))
     }
   }
 })

@@ -1,11 +1,17 @@
 <template>
-  <svg xmlns="http://www.w3.org/2000/svg" class="container">
-    <Rect v-for="shape in shapes" :key="shape.id" />
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    class="container"
+    @dragover="onDragOver"
+    @drop="onDrop"
+  >
+    <Rect v-for="shape in shapes" :key="shape.id" :x="shape.x" :y="shape.y" />
   </svg>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { ShapeType } from '@/models'
 import Rect from './Rect.vue'
 
 export default defineComponent({
@@ -20,6 +26,33 @@ export default defineComponent({
 
   components: {
     Rect
+  },
+
+  emits: ['add'],
+
+  methods: {
+    /**
+     * ドラッグ項目が有効なドロップ対象にドラッグされた場合、数百ミリ秒ごとに
+     */
+    onDragOver(e: DragEvent) {
+      // 必須っぽい
+      e.preventDefault()
+    },
+    /**
+     * 項目が有効なドロップ対象にドロップされた場合
+     */
+    onDrop(e: DragEvent) {
+      // 必須っぽい
+      e.preventDefault()
+      if (e.dataTransfer) {
+        const shapeType = e.dataTransfer.getData('text/plain') as ShapeType
+        this.$emit('add', {
+          shapeType,
+          x: e.offsetX,
+          y: e.offsetY
+        })
+      }
+    }
   }
 })
 </script>
