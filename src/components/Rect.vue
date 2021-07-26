@@ -11,7 +11,7 @@
     @mousedown="onMouseDown"
     @mouseup="onMouseUp"
   />
-  <Knobs :node="node" />
+  <Knobs :node="node" @mousemove="onKnobMouseMove" />
 </template>
 
 <script lang="ts">
@@ -91,9 +91,44 @@ export default defineComponent({
         x: e.offsetX - this.dragOffsetX,
         y: e.offsetY - this.dragOffsetY
       }
+    },
+    /**
+     * Knobドラッグ中
+     */
+    onKnobMouseMove(e: any, index: string) {
+      this.rect = after(e, this.rect, index)
     }
   }
 })
+
+const after = (e: any, rect: Data['rect'], index: string) => {
+  if (index === 'right') {
+    const horizonalChange = e.offsetX - (rect.x + rect.width)
+    return {
+      ...rect,
+      width: rect.width + horizonalChange
+    }
+  }
+
+  return rect
+}
+
+//const getEdge = (rect: Data['rect'], index: string) => {
+//  if (index === 'top') {
+//    return rect.y
+//  }
+//
+//  if (index === 'right') {
+//    return rect.x + rect.width
+//  }
+//
+//  if (index === 'bottom') {
+//    return rect.y + rect.height
+//  }
+//
+//  // left
+//  return rect.x
+//}
 </script>
 
 <style lang="scss" scoped>

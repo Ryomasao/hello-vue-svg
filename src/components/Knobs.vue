@@ -1,5 +1,13 @@
 <template>
-  <Knob v-for="(knob, index) in knobs" :key="index" :x="knob.x" :y="knob.y" />
+  <Knob
+    v-for="(knob, index) in knobs"
+    :key="index"
+    :x="knob.x"
+    :y="knob.y"
+    @mousedown="onMouseDown"
+    @mouseup="onMouseUp"
+    @mousemove="(e) => onMouseMove(e, index)"
+  />
 </template>
 
 <script lang="ts">
@@ -29,6 +37,8 @@ export default defineComponent({
       required: true
     }
   },
+
+  emits: ['mousedown', 'mouseup', 'mousemove'],
 
   data: (): Data => ({
     knobWidth: 10,
@@ -61,7 +71,26 @@ export default defineComponent({
     }
   },
 
-  methods: {}
+  methods: {
+    /**
+     * 対象の要素をクリックしてドラッグ開始したとき
+     */
+    onMouseDown(e: any) {
+      this.$emit('mousedown', e)
+    },
+    /**
+     * 対象の要素からクリックが離れたとき
+     */
+    onMouseUp(e: any) {
+      this.$emit('mouseup', e)
+    },
+    /**
+     * ドラッグ中
+     */
+    onMouseMove(e: any, index: string) {
+      this.$emit('mousemove', e, index)
+    }
+  }
 })
 </script>
 
