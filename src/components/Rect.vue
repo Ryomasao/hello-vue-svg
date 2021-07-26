@@ -47,8 +47,8 @@ export default defineComponent({
     rect: {
       x: 10,
       y: 10,
-      width: 200,
-      height: 30
+      width: 50,
+      height: 50
     },
     dragOffsetX: 0,
     dragOffsetY: 0,
