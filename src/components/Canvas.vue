@@ -5,7 +5,13 @@
     @dragover="onDragOver"
     @drop="onDrop"
   >
-    <Rect v-for="node in nodes" :key="node.id" :x="node.x" :y="node.y" />
+    <Rect
+      v-for="node in nodes"
+      :key="node.id"
+      :x="node.x"
+      :y="node.y"
+      @remove="onRemoveNode(node)"
+    />
   </svg>
 </template>
 
@@ -28,7 +34,7 @@ export default defineComponent({
     Rect
   },
 
-  emits: ['add'],
+  emits: ['add', 'remove'],
 
   methods: {
     /**
@@ -39,7 +45,7 @@ export default defineComponent({
       e.preventDefault()
     },
     /**
-     * 項目が有効なドロップ対象にドロップされた場合
+     * shapeが有効なドロップ対象にドロップされた場合
      */
     onDrop(e: DragEvent) {
       // 必須っぽい
@@ -52,6 +58,12 @@ export default defineComponent({
           y: e.offsetY
         })
       }
+    },
+    /**
+     * nodeを取り除く
+     */
+    onRemoveNode(node: any) {
+      this.$emit('remove', node)
     }
   }
 })

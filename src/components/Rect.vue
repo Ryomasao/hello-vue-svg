@@ -1,7 +1,13 @@
 <template>
+  <!-- 
+    Note フォーカス可能な要素じゃないと、keyを拾えないのでtabindexを付与
+    tabindex=0
+    @keydown.delete
+  -->
   <rect
-    ref="rect"
+    ref="rectRef"
     class="rect"
+    tabindex="0"
     :x="rect.x"
     :y="rect.y"
     :width="rect.width"
@@ -9,15 +15,17 @@
     stroke="black"
     fill="#fff"
     stroke-width="2"
-    @click="onClick"
+    @click="toggleAcitve"
     @mousedown="onMouseDown"
     @mouseup="onMouseUp"
+    @keydown.delete="onRemove"
   />
-  <Knobs v-if="active" :node="node" @mousemove="onKnobMouseMove" />
+  <Knobs v-if="isActive" :node="node" @mousemove="onKnobMouseMove" />
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
+import useClickOutside from '@/composables/useClickOutside'
 import Knobs, { Direction } from './Knobs.vue'
 
 // 参考記事
@@ -35,7 +43,6 @@ type Data = {
   dragOffsetY: number | null
   knobWidth: number
   knobHeight: number
-  active: boolean
 }
 
 const MIN_WIDTH = 50
@@ -59,6 +66,8 @@ export default defineComponent({
     }
   },
 
+  emits: ['remove'],
+
   data: (): Data => ({
     rect: {
       x: 10,
@@ -71,9 +80,7 @@ export default defineComponent({
     dragOffsetY: 0,
     // 要素のサイズを変更するKnobのサイズ
     knobWidth: 10,
-    knobHeight: 10,
-    // 要素にフォーカスがあたっている場合true
-    active: false
+    knobHeight: 10
   }),
 
   computed: {
@@ -91,12 +98,6 @@ export default defineComponent({
   },
 
   methods: {
-    onClick() {
-      this.active = !this.active
-    },
-    onClickOutside() {
-      this.active = false
-    },
     /**
      * 対象の要素をクリックしてドラッグ開始したとき
      */
@@ -136,7 +137,30 @@ export default defineComponent({
      */
     onKnobMouseMove(e: MouseEvent, index: Direction) {
       this.rect = after(e, this.rect, index)
+    },
+    /**
+     * DELETE/BackSpaceを押下したとき
+     */
+    onRemove() {
+      // NOTE activeをみたほうがいい？
+      this.$emit('remove')
     }
+  },
+
+  setup() {
+    /**
+     * 要素を押下/要素外を押下したときの状態を管理
+     */
+    const isActive = ref(false)
+    const rectRef = ref(null)
+    const toggleAcitve = () => {
+      isActive.value = !isActive.value
+    }
+    const deactive = () => {
+      isActive.value = false
+    }
+    useClickOutside(rectRef, deactive)
+    return { rectRef, isActive, toggleAcitve, deactive }
   }
 })
 

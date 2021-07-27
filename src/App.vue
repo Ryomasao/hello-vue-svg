@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <ShapePanel />
-    <Canvas :nodes="nodes" @add="onAddShape" />
+    <Canvas :nodes="nodes" @add="onAddNode" @remove="onRemoveNode" />
   </div>
 </template>
 
@@ -42,8 +42,13 @@ export default defineComponent({
   }),
 
   methods: {
-    onAddShape(payload: FactoryParam) {
+    onAddNode(payload: FactoryParam) {
       this.nodes.push(factory(payload))
+    },
+    // TODO Node型定義
+    onRemoveNode(payload: any) {
+      // immutableとmutableをaddNodeとで揃えたほうがいいかも
+      this.nodes = this.nodes.filter((node) => node.id !== payload.id)
     }
   }
 })
