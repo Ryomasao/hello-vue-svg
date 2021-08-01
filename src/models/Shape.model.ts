@@ -1,5 +1,6 @@
 export const SHAPE_TYPE = {
   RECTANGLE: 'RECTANGLE',
+  CIRCLE: 'CIRCLE',
   FOO: 'FOO'
 } as const
 

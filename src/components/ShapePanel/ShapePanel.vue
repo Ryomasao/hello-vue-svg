@@ -1,13 +1,23 @@
 <template>
   <div class="container">
     <div>
-      <ul>
-        <span
-          class="rectangle"
-          draggable="true"
-          @click="onClick"
-          @dragstart="(e) => onDragStart(e, SHAPE_TYPE.RECTANGLE)"
-        />
+      <ul class="list">
+        <li class="item-container">
+          <span
+            class="rectangle"
+            draggable="true"
+            @click="onClick"
+            @dragstart="(e) => onDragStart(e, SHAPE_TYPE.RECTANGLE)"
+          />
+        </li>
+        <li class="item-container">
+          <span
+            class="circle"
+            draggable="true"
+            @click="onClick"
+            @dragstart="(e) => onDragStart(e, SHAPE_TYPE.CIRCLE)"
+          />
+        </li>
       </ul>
     </div>
   </div>
@@ -43,10 +53,25 @@ export default defineComponent({
   background: cadetblue;
 }
 
+.list {
+  list-style: none;
+}
+
+.item-contaienr {
+}
+
 .rectangle {
   display: inline-block;
   width: 50px;
   height: 50px;
+  border: 4px solid black;
+}
+
+.circle {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
   border: 4px solid black;
 }
 </style>

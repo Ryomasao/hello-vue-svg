@@ -5,7 +5,8 @@
     @dragover="onDragOver"
     @drop="onDrop"
   >
-    <Rect
+    <component
+      :is="COMPONENTS[node.type]"
       v-for="node in nodes"
       :key="node.id"
       :x="node.x"
@@ -19,6 +20,7 @@
 import { defineComponent } from 'vue'
 import { ShapeType } from '@/models'
 import Rect from './Rect.vue'
+import Circle from './Circle.vue'
 
 export default defineComponent({
   name: 'Canvas',
@@ -31,10 +33,23 @@ export default defineComponent({
   },
 
   components: {
-    Rect
+    Rect,
+    Circle
   },
 
   emits: ['add', 'remove'],
+
+  computed: {
+    /**
+     * node.typeとコンポーネントのMap
+     */
+    COMPONENTS() {
+      return {
+        RECTANGLE: Rect,
+        CIRCLE: Circle
+      }
+    }
+  },
 
   methods: {
     /**
