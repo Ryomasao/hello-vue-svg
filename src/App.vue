@@ -7,12 +7,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { ShapeType } from '@/models'
+import { ShapeType, CONNECTOR_TYPE } from '@/models'
 import Canvas from './components/Canvas.vue'
 import ShapePanel from './components/ShapePanel/ShapePanel.vue'
 
 type FactoryParam = { shapeType: ShapeType; x: number; y: number }
-const factory = (params: FactoryParam) => {
+const shapeFactory = (params: FactoryParam) => {
   return {
     id: Date.now(),
     type: params.shapeType,
@@ -22,6 +22,17 @@ const factory = (params: FactoryParam) => {
     height: 50,
     prevNode: null,
     nextNode: null
+  }
+}
+
+const connectorFactory = (params?: any) => {
+  return {
+    id: Date.now(),
+    type: CONNECTOR_TYPE.POLYLINE,
+    x: 100,
+    y: 100,
+    leftNode: null,
+    rightNode: null
   }
 }
 
@@ -38,12 +49,12 @@ export default defineComponent({
   },
 
   data: (): Data => ({
-    nodes: []
+    nodes: [connectorFactory()]
   }),
 
   methods: {
     onAddNode(payload: FactoryParam) {
-      this.nodes.push(factory(payload))
+      this.nodes.push(shapeFactory(payload))
     },
     // TODO Node型定義
     onRemoveNode(payload: any) {

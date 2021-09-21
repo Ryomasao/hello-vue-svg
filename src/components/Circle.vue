@@ -1,8 +1,9 @@
 <template>
   <circle
     ref="circleRef"
-    class="cricle"
+    class="cricle shape"
     tabindex="0"
+    :data-id="id"
     :cx="circle.x"
     :cy="circle.y"
     :r="r"
@@ -45,6 +46,10 @@ export default defineComponent({
   },
 
   props: {
+    id: {
+      type: Number,
+      required: true
+    },
     x: {
       type: Number,
       default: () => 10

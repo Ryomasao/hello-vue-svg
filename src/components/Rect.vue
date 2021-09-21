@@ -6,12 +6,13 @@
   -->
   <rect
     ref="rectRef"
-    class="rect"
+    class="rect shape"
     tabindex="0"
     :x="rect.x"
     :y="rect.y"
     :width="rect.width"
     :height="rect.height"
+    :data-id="id"
     stroke="black"
     fill="#fff"
     stroke-width="2"
@@ -56,6 +57,10 @@ export default defineComponent({
   },
 
   props: {
+    id: {
+      type: Number,
+      required: true
+    },
     x: {
       type: Number,
       default: () => 10

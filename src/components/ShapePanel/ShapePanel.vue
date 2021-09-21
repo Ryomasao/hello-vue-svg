@@ -18,6 +18,23 @@
             @dragstart="(e) => onDragStart(e, SHAPE_TYPE.CIRCLE)"
           />
         </li>
+        <li class="item-container">
+          <svg
+            class="polyline"
+            draggable="true"
+            width="50px"
+            height="50px"
+            @click="onClick"
+            @dragstart="(e) => onDragStart(e, SHAPE_TYPE.POLY_LINE)"
+          >
+            <polyline
+              points="4,4 25,4 25,25 25,46 46,46"
+              stroke="black"
+              fill="none"
+              stroke-width="4px"
+            />
+          </svg>
+        </li>
       </ul>
     </div>
   </div>
@@ -73,5 +90,10 @@ export default defineComponent({
   height: 50px;
   border-radius: 50%;
   border: 4px solid black;
+}
+
+.polyline {
+  width: 50px;
+  height: 50px;
 }
 </style>

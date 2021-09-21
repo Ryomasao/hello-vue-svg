@@ -9,6 +9,7 @@
       :is="COMPONENTS[node.type]"
       v-for="node in nodes"
       :key="node.id"
+      :id="node.id"
       :x="node.x"
       :y="node.y"
       @remove="onRemoveNode(node)"
@@ -21,6 +22,7 @@ import { defineComponent } from 'vue'
 import { ShapeType } from '@/models'
 import Rect from './Rect.vue'
 import Circle from './Circle.vue'
+import Polyline from './Polyline.vue'
 
 export default defineComponent({
   name: 'Canvas',
@@ -34,19 +36,25 @@ export default defineComponent({
 
   components: {
     Rect,
-    Circle
+    Circle,
+    Polyline
   },
 
   emits: ['add', 'remove'],
 
   computed: {
+    //shape()
+    //{
+    //  return this.nodes.filter(node => node.type !== ShapeType.POL)
+    //},
     /**
      * node.typeとコンポーネントのMap
      */
     COMPONENTS() {
       return {
         RECTANGLE: Rect,
-        CIRCLE: Circle
+        CIRCLE: Circle,
+        POLYLINE: Polyline
       }
     }
   },
@@ -73,6 +81,12 @@ export default defineComponent({
           y: e.offsetY
         })
       }
+    },
+    /**
+     * nodeを取り除く
+     */
+    onHoverPolyline(shapeId: number) {
+      console.log(shapeId)
     },
     /**
      * nodeを取り除く
